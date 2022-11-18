@@ -16,7 +16,7 @@ classpath = ":".join(ucanaccess_jars)
 cnxn = jaydebeapi.connect("net.ucanaccess.jdbc.UcanaccessDriver",
                           f"jdbc:ucanaccess://{db_path};newDatabaseVersion=V2010", ["", ""], classpath)
 crsr = cnxn.cursor()
-crsr.execute(f"select * from {os.path.basename(sys.argv[1]).replace('.mdb', '')} limit 100")
+crsr.execute(f"select * from {os.path.basename(sys.argv[1]).replace('.mdb', '')}")
 with open(f'{os.environ.get("XL_IDP_PATH_FTS")}/flat_fts/csv/{os.path.basename(sys.argv[1])}.csv', 'w') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow([i[0] for i in crsr.description])
