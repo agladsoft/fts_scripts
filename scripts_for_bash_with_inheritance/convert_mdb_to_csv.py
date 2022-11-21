@@ -46,6 +46,7 @@ logger.setLevel(logging.INFO)
 logger.info(f"File {input_file_path} will be read")
 table = MDBTable(file_path=input_file_path, table=file_name_without_exp)
 columns = table.columns
+logger.info(f"{len(list(table))}")
 logger.info(f"Columns - {columns}")
 csv_table = []
 for rows in table:
