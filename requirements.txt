@@ -1,6 +1,4 @@
 mdb-parser==0.0.3
 pandas==1.4.3
-wheel==0.37.1
 setuptools==60.2.0
-pyodbc==4.0.34
 numpy==1.23.3
