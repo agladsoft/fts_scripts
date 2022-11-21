@@ -53,6 +53,7 @@ for rows in table:
     csv_table.append(dict_data)
 
 csv_file = f"{sys.argv[2]}/{os.path.basename(sys.argv[1])}.csv"
+logger.info(f"File {input_file_path} will be write in directory {csv_file}")
 try:
     with open(csv_file, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=columns)
