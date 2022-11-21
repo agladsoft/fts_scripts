@@ -17,7 +17,7 @@
 #                           f"jdbc:ucanaccess://{db_path};newDatabaseVersion=V2010", ["", ""], classpath)
 # crsr = cnxn.cursor()
 # crsr.execute(f"select * from {os.path.basename(sys.argv[1]).replace('.mdb', '')}")
-# with open(f'{os.environ.get("XL_IDP_PATH_FTS")}/flat_fts/csv/{os.path.basename(sys.argv[1])}.csv', 'w') as csvfile:
+# with open(f'{sys.argv[2]}/{os.path.basename(sys.argv[1])}.csv', 'w') as csvfile:
 #     writer = csv.writer(csvfile)
 #     writer.writerow([i[0] for i in crsr.description])
 #     writer.writerows(crsr.fetchall())
@@ -26,18 +26,27 @@
 # cnxn.close()
 
 
-import csv
 import os
+import csv
 import sys
+import logging
 from mdb_parser import MDBTable
 
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
 file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 
+console = logging.StreamHandler()
+logger = logging.getLogger("loggger")
+if logger.hasHandlers():
+    logger.handlers.clear()
+logger.addHandler(console)
+logger.setLevel(logging.INFO)
+
+logger.info(f"File {input_file_path} will be read")
 table = MDBTable(file_path=input_file_path, table=file_name_without_exp)
 columns = table.columns
-print(columns)
+logger.info(f"Columns - {columns}")
 csv_table = []
 for rows in table:
     dict_data = {column: row for row, column in zip(rows, columns)}
@@ -50,6 +59,6 @@ try:
         writer.writeheader()
         for data in csv_table:
             writer.writerow(data)
-    print("File was written successfully")
+    logger.info(f"File {input_file_path} was written successfully")
 except IOError:
     print("I/O error")
