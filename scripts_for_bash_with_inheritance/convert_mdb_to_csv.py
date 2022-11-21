@@ -37,7 +37,7 @@ file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 
 table = MDBTable(file_path=input_file_path, table=file_name_without_exp)
 columns = table.columns
-
+print(columns)
 csv_table = []
 for rows in table:
     dict_data = {column: row for row, column in zip(rows, columns)}
@@ -50,5 +50,6 @@ try:
         writer.writeheader()
         for data in csv_table:
             writer.writerow(data)
+    print("File was written successfully")
 except IOError:
     print("I/O error")
