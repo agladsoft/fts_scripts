@@ -24,7 +24,7 @@ for index, chunk_parsed_data in enumerate(divided_parsed_data):
                 if key in ['the_total_customs_value_of_the_gtd', 'total_invoice_value_for_gtd', 'currency_exchange_rate',
                            'number_of_goods_in_additional_units', 'the_number_of_goods_in_the_second_unit_change',
                            'net_weight_kg', 'gross_weight_kg', 'invoice_value', 'customs_value_rub', 'statistical_cost_usd',
-                           'usd_for_kg']:
+                           'usd_for_kg', 'quota']:
                     dict_data[key] = float(value)
         dict_data['original_file_name'] = os.path.basename(input_file_path)
         dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
