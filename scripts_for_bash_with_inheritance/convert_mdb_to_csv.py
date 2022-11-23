@@ -29,16 +29,16 @@
 import os
 import csv
 import sys
-from mdb_parser import MDBTable
+from mdb_parser import MDBTable, MDBParser
 from __init__ import logger
 
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
 file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 
-
+db = MDBParser(file_path=input_file_path)
 logger.info(f"File {input_file_path} will be read")
-table = MDBTable(file_path=input_file_path, table=file_name_without_exp)
+table = MDBTable(file_path=input_file_path, table=db.tables[0])
 columns = table.columns + ["original_file_index"]
 csv_table = []
 for index, rows in enumerate(table):
