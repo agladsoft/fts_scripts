@@ -4,7 +4,7 @@ import sys
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
 
-worker_count = 1
+worker_count = 10
 
 headers_eng = {
     "STAT": "stat",
