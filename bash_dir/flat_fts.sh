@@ -47,6 +47,7 @@ do
   if [ $? -eq 0 ]
 	then
 	  mv "${file}" "${done_path}"
+	  mv "${csv_name}" "${done_path}"
 	else
 	  echo "ERROR during convertion ${file} to csv!"
 	  mv "${file}" "${xls_path}/error_$(basename "${file}")"
