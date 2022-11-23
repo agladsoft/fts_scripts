@@ -45,9 +45,10 @@ if __name__ == "__main__":
     df_download, hashlib_download = read_csv_pandas(download_file, True)
     if hashlib_upload == hashlib_download:
         logger.info("Хэш файлов одинаковый")
-    df_upload['flag'] = 'old'
-    df_download['flag'] = 'new'
-    df_concat = pd.concat([df_upload, df_download])
-    duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
-    duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
-                              index=False)
+    else:
+        df_upload['flag'] = 'old'
+        df_download['flag'] = 'new'
+        df_concat = pd.concat([df_upload, df_download])
+        duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
+        duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
+                                  index=False)
