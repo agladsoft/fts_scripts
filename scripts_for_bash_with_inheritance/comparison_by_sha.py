@@ -50,7 +50,9 @@ if __name__ == "__main__":
     base_name_download_file = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
     df_upload, hashlib_upload = read_csv_pandas(upload_file, base_name_upload_file)
+    logger.info("Upload file has been complete")
     df_download, hashlib_download = read_csv_pandas(download_file, base_name_download_file, True)
+    logger.info("Download file has been complete")
     if hashlib_upload == hashlib_download:
         logger.info("Хэш файлов одинаковый")
     else:
