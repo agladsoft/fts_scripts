@@ -1,6 +1,8 @@
-import contextlib
+import os
+import sys
 import json
 import datetime
+import contextlib
 import numpy as np
 import pandas as pd
 from __init__ import *
@@ -10,6 +12,9 @@ def divide_chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
+
+input_file_path = os.path.abspath(sys.argv[1])
+output_folder = sys.argv[2]
 
 df = pd.read_csv(input_file_path, low_memory=False, dtype=str)
 df.replace({np.NAN: None}, inplace=True)

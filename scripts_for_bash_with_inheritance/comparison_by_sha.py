@@ -1,11 +1,13 @@
+import os
 import sys
+import zipfile
 import hashlib
 import contextlib
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from __init__ import headers_eng, logger
 from typing import Tuple, List
+from __init__ import headers_eng, logger
 
 
 def change_types_columns_and_replace_quot_marks(parsed_data: List[dict]) -> None:
@@ -32,13 +34,20 @@ def read_csv_pandas(csv_file: str, is_download: bool = False) -> Tuple[DataFrame
     return df, hashlib.sha256(df.to_string().encode('utf-8')).hexdigest()
 
 
+def unzip_file(zip_file):
+    with zipfile.ZipFile(zip_file, "r") as zf:
+        return [zf.extract(name, f"{os.path.dirname(sys.argv[1])}/csv") for name in zf.namelist()]
+
+
 if __name__ == "__main__":
-    df_upload, hashlib_upload = read_csv_pandas(sys.argv[1])
-    df_download, hashlib_download = read_csv_pandas(sys.argv[2], True)
+    upload_file, download_file = unzip_file(sys.argv[1])
+    df_upload, hashlib_upload = read_csv_pandas(upload_file)
+    df_download, hashlib_download = read_csv_pandas(download_file, True)
     if hashlib_upload == hashlib_download:
         logger.info("Хэш файлов одинаковый")
     df_upload['flag'] = 'old'
     df_download['flag'] = 'new'
     df_concat = pd.concat([df_upload, df_download])
     duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
-    duplicates_dropped.to_csv('difference.csv', index=False)
+    duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
+                              index=False)

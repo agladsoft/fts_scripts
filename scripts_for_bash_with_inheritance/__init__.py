@@ -1,9 +1,4 @@
-import os
-import sys
 import logging
-
-input_file_path = os.path.abspath(sys.argv[1])
-output_folder = sys.argv[2]
 
 console = logging.StreamHandler()
 logger = logging.getLogger("loggger")

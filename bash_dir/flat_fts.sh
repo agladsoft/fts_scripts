@@ -2,6 +2,10 @@
 
 xls_path="${XL_IDP_PATH_FTS}/flat_fts"
 
+compare_csv_path="${xls_path}"/compare_csv
+if [ ! -d "$compare_csv_path" ]; then
+  mkdir "${compare_csv_path}"
+fi
 
 csv_path="${xls_path}"/csv
 if [ ! -d "$csv_path" ]; then
