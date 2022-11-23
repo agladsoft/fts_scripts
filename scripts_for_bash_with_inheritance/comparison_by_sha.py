@@ -4,7 +4,7 @@ import contextlib
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from __init__ import headers_eng
+from __init__ import headers_eng, logger
 from typing import Tuple, List
 
 
@@ -35,6 +35,8 @@ def read_csv_pandas(csv_file: str, is_download: bool = False) -> Tuple[DataFrame
 if __name__ == "__main__":
     df_upload, hashlib_upload = read_csv_pandas(sys.argv[1])
     df_download, hashlib_download = read_csv_pandas(sys.argv[2], True)
+    if hashlib_upload == hashlib_download:
+        logger.info("Хэш файлов одинаковый")
     df_upload['flag'] = 'old'
     df_download['flag'] = 'new'
     df_concat = pd.concat([df_upload, df_download])

@@ -29,19 +29,13 @@
 import os
 import csv
 import sys
-import logging
 from mdb_parser import MDBTable
+from __init__ import logger
 
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
 file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 
-console = logging.StreamHandler()
-logger = logging.getLogger("loggger")
-if logger.hasHandlers():
-    logger.handlers.clear()
-logger.addHandler(console)
-logger.setLevel(logging.INFO)
 
 logger.info(f"File {input_file_path} will be read")
 table = MDBTable(file_path=input_file_path, table=file_name_without_exp)

@@ -1,8 +1,16 @@
 import os
 import sys
+import logging
 
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
+
+console = logging.StreamHandler()
+logger = logging.getLogger("loggger")
+if logger.hasHandlers():
+    logger.handlers.clear()
+logger.addHandler(console)
+logger.setLevel(logging.INFO)
 
 worker_count = 10
 
