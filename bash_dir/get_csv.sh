@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xls_path="${XL_IDP_PATH_FTS}/flat_fts/done"
+xls_path="${XL_IDP_PATH_FTS}/flat_fts/csv"
 
 cd "${xls_path}" || exit
 
