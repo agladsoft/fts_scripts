@@ -5,7 +5,7 @@ import contextlib
 import hashlib
 import numpy as np
 import pandas as pd
-from typing import List
+from typing import List, Tuple
 from pandas import DataFrame
 from __init__ import headers_eng, logger
 
@@ -22,7 +22,7 @@ def change_types_columns_and_replace_quot_marks(parsed_data: List[dict]) -> None
                     dict_data[key] = str(float(value))
 
 
-def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = False) -> DataFrame:
+def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = False) -> Tuple[DataFrame, str]:
     df = pd.read_csv(csv_file, low_memory=False, dtype=str)
     logger.info(f"{base_name_csv_file}: File has been read")
     if is_download:
@@ -36,9 +36,9 @@ def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = 
     logger.info(f"{base_name_csv_file}: Changed column types")
     df = pd.DataFrame(parsed_data)
     logger.info(f"{base_name_csv_file}: List with dictionary converted to a dataframe")
-    # hash_file = hashlib.md5(str(parsed_data).encode()).hexdigest()
-    # logger.info(f"{hash_file}")
-    return df
+    hash_file = hashlib.md5(str(parsed_data).encode()).hexdigest()
+    logger.info(f"{base_name_csv_file}: Hash is {hash_file}")
+    return df, hash_file
 
 
 def unzip_file(zip_file):
@@ -51,8 +51,12 @@ if __name__ == "__main__":
     base_name_upload_file = os.path.basename(upload_file)
     base_name_download_file = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
-    df_upload = read_csv_pandas(upload_file, base_name_upload_file)
-    df_download = read_csv_pandas(download_file, base_name_download_file, True)
+    df_upload, hash_upload = read_csv_pandas(upload_file, base_name_upload_file)
+    df_download, hash_download = read_csv_pandas(download_file, base_name_download_file, True)
+    if hash_upload == hash_download:
+        logger.info(f"EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are equal")
+    else:
+        logger.info(f"NOT EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are not equal")
     df_upload['flag'] = 'old'
     df_download['flag'] = 'new'
     df_concat = pd.concat([df_upload, df_download])
