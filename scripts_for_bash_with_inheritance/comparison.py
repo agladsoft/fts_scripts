@@ -13,8 +13,8 @@ from __init__ import headers_eng, logger
 def compare_csv(df_up: DataFrame, df_down: DataFrame) -> None:
     df_up['flag'] = 'old'
     df_down['flag'] = 'new'
-    df_concat = pd.concat([df_up, df_down])
-    duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
+    df_concat: DataFrame = pd.concat([df_up, df_down])
+    duplicates_dropped: DataFrame = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
     duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
                               index=False)
 
@@ -39,20 +39,20 @@ def change_types_columns_and_replace_quot_marks(parsed_data: List[dict]) -> None
 
 
 def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = False) -> Tuple[DataFrame, str]:
-    df = pd.read_csv(csv_file, low_memory=False, dtype=str)
+    df: DataFrame = pd.read_csv(csv_file, low_memory=False, dtype=str)
     logger.info(f"{base_name_csv_file}: File has been read")
     if is_download:
         df = df.loc[:, ~df.columns.isin(["id", "original_file_name", "original_file_parsed_on"])]
     df = df.rename(columns=headers_eng)
     df.replace({np.NAN: None}, inplace=True)
     logger.info(f"{base_name_csv_file}: Column names have been replaced")
-    parsed_data = df.to_dict('records')
+    parsed_data: List[dict] = df.to_dict('records')
     logger.info(f"{base_name_csv_file}: Dataframe have been converted to a list with dictionary")
     change_types_columns_and_replace_quot_marks(parsed_data)
     logger.info(f"{base_name_csv_file}: Changed column types")
     df = pd.DataFrame(parsed_data)
     logger.info(f"{base_name_csv_file}: List with dictionary converted to a dataframe")
-    hash_file = hashlib.md5(str(parsed_data).encode()).hexdigest()
+    hash_file: str = hashlib.md5(str(parsed_data).encode()).hexdigest()
     logger.info(f"{base_name_csv_file}: Hash is {hash_file}")
     return df, hash_file
 
@@ -64,11 +64,11 @@ def unzip_file(zip_file: str) -> List[str]:
 
 if __name__ == "__main__":
     upload_file, download_file = unzip_file(sys.argv[1])
-    base_name_upload_file = os.path.basename(upload_file)
-    base_name_download_file = os.path.basename(download_file)
+    base_name_upload_file: str = os.path.basename(upload_file)
+    base_name_download_file: str = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
     df_upload, hash_upload = read_csv_pandas(upload_file, base_name_upload_file)
-    df_download, hash_download = read_csv_pandas(download_file, base_name_download_file, True)
+    df_download, hash_download = read_csv_pandas(download_file, base_name_download_file, is_download=True)
     is_equal_hash(hash_upload, hash_download)
     compare_csv(df_upload, df_download)
     os.remove(upload_file)
