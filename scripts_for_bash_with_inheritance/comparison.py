@@ -1,13 +1,29 @@
 import os
 import sys
 import zipfile
-import contextlib
 import hashlib
+import contextlib
 import numpy as np
 import pandas as pd
-from typing import List, Tuple
 from pandas import DataFrame
+from typing import List, Tuple
 from __init__ import headers_eng, logger
+
+
+def compare_csv(df_up: DataFrame, df_down: DataFrame) -> None:
+    df_up['flag'] = 'old'
+    df_down['flag'] = 'new'
+    df_concat = pd.concat([df_up, df_down])
+    duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
+    duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
+                              index=False)
+
+
+def is_equal_hash(hash_up: str, hash_down: str) -> None:
+    if hash_up == hash_down:
+        logger.info(f"EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are equal")
+    else:
+        logger.info(f"NOT EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are not equal")
 
 
 def change_types_columns_and_replace_quot_marks(parsed_data: List[dict]) -> None:
@@ -41,7 +57,7 @@ def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = 
     return df, hash_file
 
 
-def unzip_file(zip_file):
+def unzip_file(zip_file: str) -> List[str]:
     with zipfile.ZipFile(zip_file, "r") as zf:
         return [zf.extract(name, f"{os.path.dirname(sys.argv[1])}/csv") for name in sorted(zf.namelist(), reverse=True)]
 
@@ -53,13 +69,7 @@ if __name__ == "__main__":
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
     df_upload, hash_upload = read_csv_pandas(upload_file, base_name_upload_file)
     df_download, hash_download = read_csv_pandas(download_file, base_name_download_file, True)
-    if hash_upload == hash_download:
-        logger.info(f"EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are equal")
-    else:
-        logger.info(f"NOT EQUAL: The hashes of {base_name_upload_file} and {base_name_download_file} are not equal")
-    df_upload['flag'] = 'old'
-    df_download['flag'] = 'new'
-    df_concat = pd.concat([df_upload, df_download])
-    duplicates_dropped = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
-    duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
-                              index=False)
+    is_equal_hash(hash_upload, hash_download)
+    compare_csv(df_upload, df_download)
+    os.remove(upload_file)
+    os.remove(download_file)

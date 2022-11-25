@@ -7,7 +7,6 @@ if logger.hasHandlers():
 logger.addHandler(console)
 logger.setLevel(logging.INFO)
 
-worker_count = 10
 
 headers_eng = {
     "STAT": "stat",

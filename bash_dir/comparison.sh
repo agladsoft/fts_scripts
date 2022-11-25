@@ -26,7 +26,7 @@ do
 
   if [[ ${mime_type} = "application/zip" ]]
   then
-    python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/comparison_by_sha.py "${file}"
+    python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/comparison.py "${file}"
   else
     echo "ERROR: unsupported format ${mime_type}"
     mv "${file}" "${xls_path}/error_$(basename "${file}")"
