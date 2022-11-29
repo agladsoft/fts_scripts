@@ -42,11 +42,11 @@ do
   elif [[ ${mime_type} = "application/vnd.ms-excel" ]]
   then
     echo "Will convert XLS '${file}' to CSV '${csv_name}'"
-    in2csv -f xls "${file}" > "${csv_name}"
+    xlsx2csv "${file}" > "${csv_name}"
   elif [[ ${mime_type} = "application/octet-stream" ]]
   then
     echo "Will convert XLSX or XLSM '${file}' to CSV '${csv_name}'"
-    in2csv -f xlsx "${file}" > "${csv_name}"
+    xlsx2csv "${file}" > "${csv_name}"
   else
     echo "ERROR: unsupported format ${mime_type}"
     mv "${file}" "${xls_path}/error_$(basename "${file}")"
