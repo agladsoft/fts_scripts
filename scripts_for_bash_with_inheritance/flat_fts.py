@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import datetime
+import itertools
 import contextlib
 import numpy as np
 import pandas as pd
@@ -13,12 +14,21 @@ def divide_chunks(l, n):
         yield l[i:i + n]
 
 
+def rename_columns(df):
+    dict_columns_eng = {}
+    for column, columns in itertools.product(df.columns, headers_eng):
+        for column_eng in columns:
+            if column == column_eng:
+                dict_columns_eng[column] = headers_eng[columns]
+    df.rename(columns=dict_columns_eng, inplace=True)
+
+
 input_file_path = os.path.abspath(sys.argv[1])
 output_folder = sys.argv[2]
 
 df = pd.read_csv(input_file_path, low_memory=False, dtype=str)
 df.replace({np.NAN: None}, inplace=True)
-df = df.rename(columns=headers_eng)
+rename_columns(df)
 parsed_data = df.to_dict('records')
 
 divided_parsed_data = list(divide_chunks(parsed_data, 50000))
@@ -31,6 +41,9 @@ for index, chunk_parsed_data in enumerate(divided_parsed_data):
                            'net_weight_kg', 'gross_weight_kg', 'invoice_value', 'customs_value_rub', 'statistical_cost_usd',
                            'usd_for_kg', 'quota']:
                     dict_data[key] = float(value)
+                elif key in ['stat']:
+                    if value in ['True', 'False']:
+                        dict_data[key] = str(int(value == 'True'))
         dict_data['original_file_name'] = os.path.basename(input_file_path)
         dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     basename = os.path.basename(input_file_path)

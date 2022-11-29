@@ -22,7 +22,7 @@ if [ ! -d "$json_path" ]; then
   mkdir "${json_path}"
 fi
 
-find "${xls_path}" -maxdepth 1 -type f \( -name "*.mdb" \) ! -newermt '3 seconds ago' -print0 | while read -d $'\0' file
+find "${xls_path}" -maxdepth 1 -type f \( -name "*.mdb" -or -name "*.xls*" -or -name "*.accdb" \) ! -newermt '3 seconds ago' -print0 | while read -d $'\0' file
 do
 
   if [[ "${file}" == *"error_"* ]];
@@ -39,6 +39,14 @@ do
   then
     echo "Will convert XLS '${file}' to CSV '${csv_name}'"
     python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/convert_mdb_to_csv.py "${file}" "${csv_path}"
+  elif [[ ${mime_type} = "application/vnd.ms-excel" ]]
+  then
+    echo "Will convert XLS '${file}' to CSV '${csv_name}'"
+    in2csv -f xls "${file}" > "${csv_name}"
+  elif [[ ${mime_type} = "application/octet-stream" ]]
+  then
+    echo "Will convert XLSX or XLSM '${file}' to CSV '${csv_name}'"
+    in2csv -f xlsx "${file}" > "${csv_name}"
   else
     echo "ERROR: unsupported format ${mime_type}"
     mv "${file}" "${xls_path}/error_$(basename "${file}")"

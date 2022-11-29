@@ -2,6 +2,7 @@ import os
 import sys
 import zipfile
 import hashlib
+import itertools
 import contextlib
 import numpy as np
 import pandas as pd
@@ -17,6 +18,15 @@ def compare_csv(df_up: DataFrame, df_down: DataFrame) -> None:
     duplicates_dropped: DataFrame = df_concat.drop_duplicates(df_concat.columns.difference(['flag']), keep=False)
     duplicates_dropped.to_csv(f'{os.path.dirname(sys.argv[1])}/csv/{os.path.basename(sys.argv[1])}_difference.csv',
                               index=False)
+
+
+def rename_columns(df):
+    dict_columns_eng = {}
+    for column, columns in itertools.product(df.columns, headers_eng):
+        for column_eng in columns:
+            if column == column_eng:
+                dict_columns_eng[column] = headers_eng[columns]
+    df.rename(columns=dict_columns_eng, inplace=True)
 
 
 def is_equal_hash(hash_up: str, hash_down: str) -> None:
@@ -36,6 +46,9 @@ def change_types_columns_and_replace_quot_marks(parsed_data: List[dict]) -> None
                            'the_number_of_goods_in_the_second_unit_change', 'net_weight_kg', 'gross_weight_kg',
                            'invoice_value', 'customs_value_rub', 'statistical_cost_usd', 'usd_for_kg', 'quota']:
                     dict_data[key] = str(float(value))
+                elif key in ['stat']:
+                    if value in ['True', 'False']:
+                        dict_data[key] = str(int(value == 'True'))
 
 
 def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = False) -> Tuple[DataFrame, str]:
@@ -43,7 +56,7 @@ def read_csv_pandas(csv_file: str, base_name_csv_file: str, is_download: bool = 
     logger.info(f"{base_name_csv_file}: File has been read")
     if is_download:
         df = df.loc[:, ~df.columns.isin(["id", "original_file_name", "original_file_parsed_on"])]
-    df = df.rename(columns=headers_eng)
+    rename_columns(df)
     df.replace({np.NAN: None}, inplace=True)
     logger.info(f"{base_name_csv_file}: Column names have been replaced")
     parsed_data: List[dict] = df.to_dict('records')
