@@ -1,5 +1,6 @@
 #!/bin/bash
-
+export XL_IDP_PATH_FTS=/home/timurzav/fts
+export XL_IDP_ROOT_FTS=/home/timurzav/PycharmWork/docker_project/fts_scripts
 xls_path="${XL_IDP_PATH_FTS}/flat_fts"
 
 compare_csv_path="${xls_path}"/compare_csv
@@ -38,7 +39,7 @@ do
   if [[ ${mime_type} = "application/x-msaccess" ]]
   then
     echo "Will convert XLS '${file}' to CSV '${csv_name}'"
-    python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/convert_mdb_to_csv.py ${file} "${csv_path}"
+    python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/convert_mdb_to_csv.py "${file}" "${csv_path}"
   elif [[ ${mime_type} = "application/vnd.ms-excel" ]]
   then
     echo "Will convert XLS '${file}' to CSV '${csv_name}'"

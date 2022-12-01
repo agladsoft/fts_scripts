@@ -4,7 +4,9 @@ import sys
 from mdb_parser import MDBTable, MDBParser
 from __init__ import logger
 
-input_file_path = os.path.abspath(sys.argv[1])
+basename_input_file_path = os.path.basename(sys.argv[1])
+dir_name_input_file_path = os.path.dirname(sys.argv[1])
+input_file_path = f"{dir_name_input_file_path}/'{basename_input_file_path}'"
 output_folder = sys.argv[2]
 file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 
