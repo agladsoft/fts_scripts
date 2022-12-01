@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import zipfile
 import hashlib
 import itertools
@@ -20,7 +21,7 @@ def compare_csv(df_up: DataFrame, df_down: DataFrame) -> None:
                               index=False)
 
 
-def rename_columns(df):
+def rename_columns(df: DataFrame):
     dict_columns_eng = {}
     for column, columns in itertools.product(df.columns, headers_eng):
         for column_eng in columns:
@@ -75,6 +76,25 @@ def unzip_file(zip_file: str) -> List[str]:
         return [zf.extract(name, f"{os.path.dirname(sys.argv[1])}/csv") for name in sorted(zf.namelist(), reverse=True)]
 
 
+def save_files_fro_zip(df_up: DataFrame, df_down: DataFrame, up_file: str, down_file: str, hash_up: str,
+                       hash_down: str) -> None:
+    with open(f"{up_file}.txt", "w") as hash_up_file:
+        hash_up_file.write(hash_up)
+    with open(f"{down_file}.txt", "w") as hash_down_file:
+        hash_down_file.write(hash_down)
+    df_up.to_csv(up_file)
+    df_down.to_csv(down_file)
+
+
+def zip_files(zip_file: str, up_file: str, down_file: str) -> None:
+    with zipfile.ZipFile(f"{os.path.dirname(zip_file)}/done/{os.path.basename(zip_file)}_compared.zip", "w",
+                         zipfile.ZIP_DEFLATED) as zf:
+        zf.write(up_file, os.path.basename(up_file))
+        zf.write(down_file, os.path.basename(down_file))
+        zf.write(f"{up_file}.txt", os.path.basename(f"{up_file}.txt"))
+        zf.write(f"{down_file}.txt", os.path.basename(f"{down_file}.txt"))
+
+
 if __name__ == "__main__":
     upload_file, download_file = unzip_file(sys.argv[1])
     base_name_upload_file: str = os.path.basename(upload_file)
@@ -84,5 +104,7 @@ if __name__ == "__main__":
     df_download, hash_download = read_csv_pandas(download_file, base_name_download_file, is_download=True)
     is_equal_hash(hash_upload, hash_download)
     compare_csv(df_upload, df_download)
-    os.remove(upload_file)
-    os.remove(download_file)
+    save_files_fro_zip(df_upload, df_download, upload_file, download_file, hash_upload, hash_download)
+    zip_files(sys.argv[1], upload_file, download_file)
+    for files in [f"{upload_file}*", f"{download_file}*"]:
+        [os.remove(file) for file in glob.glob(files)]
