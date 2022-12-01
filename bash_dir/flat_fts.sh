@@ -1,6 +1,5 @@
 #!/bin/bash
-export XL_IDP_PATH_FTS=/home/timurzav/fts
-export XL_IDP_ROOT_FTS=/home/timurzav/PycharmWork/docker_project/fts_scripts
+
 xls_path="${XL_IDP_PATH_FTS}/flat_fts"
 
 compare_csv_path="${xls_path}"/compare_csv
