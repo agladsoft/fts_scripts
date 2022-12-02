@@ -43,7 +43,7 @@ headers_eng = {
     ("G0931", "G0931 (Код страны контрактодержателя)"): "country_code_of_the_contract_holder",
     ("G093", "G093 (Адрес контрактодержателя)"): "address_of_the_contract_holder",
     ("G097",): "g098",
-    ("xCONTAINER",): "xcontainer",
+    ("xCONTAINER", "CONTAINER"): "xcontainer",
     ("G11", "G11 (Код торгующей страны)"): "code_of_the_trading_country",
     ("G12", "G12 (Общая таможенная стоимость по ГТД)"): "the_total_customs_value_of_the_gtd",
     ("G121",): "the_currency_code_is_there_costs",

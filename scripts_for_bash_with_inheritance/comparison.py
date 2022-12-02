@@ -82,8 +82,8 @@ def save_files_fro_zip(df_up: DataFrame, df_down: DataFrame, up_file: str, down_
         hash_up_file.write(hash_up)
     with open(f"{down_file}.txt", "w") as hash_down_file:
         hash_down_file.write(hash_down)
-    df_up.to_csv(up_file)
-    df_down.to_csv(down_file)
+    df_up.to_csv(up_file, index=False)
+    df_down.to_csv(down_file, index=False)
 
 
 def zip_files(zip_file: str, up_file: str, down_file: str) -> None:
