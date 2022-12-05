@@ -144,7 +144,7 @@ headers_eng = {
     ("CONTR",): "contr",
     ("KDT_TYPE",): "kdt_type",
     ("NOTE",): "note",
-    ("FIRM", "FIRM (Доп.информация о контрактодержателе (Росстат)"): "additional_information_about_the_contract_holder_from_rosstat",
+    ("FIRM", "FIRM (Доп.информация о контрактодержателе (Росстат))"): "additional_information_about_the_contract_holder_from_rosstat",
     ("G0131",): "g0131",
     ("G020",): "g020",
     ("G023CITY",): "senders_city",

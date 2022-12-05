@@ -13,11 +13,10 @@ file_name_without_exp = os.path.basename(sys.argv[1]).replace(".mdb", "")
 db = MDBParser(file_path=input_file_path)
 logger.info(f"File {input_file_path} will be read")
 table = MDBTable(file_path=input_file_path, table=db.tables[0])
-columns = table.columns + ["original_file_index"]
+columns = table.columns
 csv_table = []
-for index, rows in enumerate(table):
+for rows in table:
     dict_data = {column: row for row, column in zip(rows, columns)}
-    dict_data["original_file_index"] = index
     csv_table.append(dict_data)
 
 csv_file = f"{sys.argv[2]}/{os.path.basename(sys.argv[1])}.csv"

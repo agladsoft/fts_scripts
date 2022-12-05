@@ -31,6 +31,7 @@ df.replace({np.NAN: None}, inplace=True)
 rename_columns(df)
 parsed_data = df.to_dict('records')
 
+original_file_index = 0
 divided_parsed_data = list(divide_chunks(parsed_data, 50000))
 for index, chunk_parsed_data in enumerate(divided_parsed_data):
     for dict_data in chunk_parsed_data:
@@ -46,6 +47,8 @@ for index, chunk_parsed_data in enumerate(divided_parsed_data):
                         dict_data[key] = str(int(value == 'True'))
         dict_data['original_file_name'] = os.path.basename(input_file_path)
         dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        dict_data['original_file_index'] = original_file_index
+        original_file_index += 1
     basename = os.path.basename(input_file_path)
     output_file_path = os.path.join(output_folder, f'{basename}_{index}.json')
     with open(f"{output_file_path}", 'w', encoding='utf-8') as f:
