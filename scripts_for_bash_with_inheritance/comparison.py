@@ -41,7 +41,7 @@ class Zip(object):
         return absolute_file_zip
 
 
-class Csv(object):
+class ComparisonCsv(object):
     def __init__(self, up_file, down_file):
         self.upload_file = up_file
         self.download_file = down_file
@@ -123,8 +123,8 @@ if __name__ == "__main__":
     base_name_upload_file: str = os.path.basename(upload_file)
     base_name_download_file: str = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
-    csv_ = Csv(upload_file, download_file)
-    df_upload, df_download, hash_upload, hash_download = csv_.main(base_name_upload_file, base_name_download_file)
+    comparison_csv = ComparisonCsv(upload_file, download_file)
+    df_upload, df_download, hash_upload, hash_download = comparison_csv.main(base_name_upload_file, base_name_download_file)
     zip_.save_files_for_zip(df_upload, df_download, upload_file, download_file, hash_upload, hash_download)
     logger.info(f"{base_name_upload_file, base_name_download_file}: Saved files for zip")
     file_zip = zip_.zip_files(upload_file, download_file)
