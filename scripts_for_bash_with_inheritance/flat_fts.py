@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import datetime
@@ -13,6 +14,13 @@ def divide_chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
+
+def convert_format_date(date):
+    if date_of_registration := re.findall(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}[.]\d{1,2}[.]\d{2,4}', date):
+        for date_format in date_formats:
+            with contextlib.suppress(ValueError):
+                return datetime.datetime.strptime(date_of_registration[0], date_format).date()
+    return date
 
 def rename_columns(df):
     dict_columns_eng = {}
@@ -45,6 +53,8 @@ for index, chunk_parsed_data in enumerate(divided_parsed_data):
                 elif key in ['stat']:
                     if value in ['True', 'False']:
                         dict_data[key] = str(int(value == 'True'))
+                elif key in ['date_of_registration']:
+                    dict_data[key] = convert_format_date(value)
         dict_data['original_file_name'] = os.path.basename(input_file_path)
         dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         dict_data['original_file_index'] = original_file_index
