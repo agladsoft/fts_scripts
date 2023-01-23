@@ -47,6 +47,10 @@ do
   then
     echo "Will convert XLSX or XLSM '${file}' to CSV '${csv_name}'"
     xlsx2csv "${file}" > "${csv_name}"
+  elif [[ ${mime_type} = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ]]
+  then
+    echo "Will convert XLSX or XLSM '${file}' to CSV '${csv_name}'"
+    xlsx2csv "${file}" > "${csv_name}"
   else
     echo "ERROR: unsupported format ${mime_type}"
     mv "${file}" "${xls_path}/error_$(basename "${file}")"
