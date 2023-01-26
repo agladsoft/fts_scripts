@@ -7,9 +7,9 @@ import itertools
 import contextlib
 import numpy as np
 import pandas as pd
+from __init__ import *
 from pandas import DataFrame
 from typing import List, Tuple
-from __init__ import headers_eng, logger
 
 
 class Zip(object):
@@ -56,12 +56,9 @@ class ComparisonCsv(object):
             for key, value in dict_data.items():
                 with contextlib.suppress(Exception):
                     dict_data[key] = value.replace('"', '').replace("''", "")
-                    if key in ['the_total_customs_value_of_the_gtd', 'total_invoice_value_for_gtd',
-                               'currency_exchange_rate', 'number_of_goods_in_additional_units',
-                               'the_number_of_goods_in_the_second_unit_change', 'net_weight_kg', 'gross_weight_kg',
-                               'invoice_value', 'customs_value_rub', 'statistical_cost_usd', 'usd_for_kg', 'quota']:
+                    if key in list_of_float_type:
                         dict_data[key] = str(float(value))
-                    elif key in ['stat']:
+                    elif key in list_of_str_type:
                         if value in ['True', 'False']:
                             dict_data[key] = str(int(value == 'True'))
 
