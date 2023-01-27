@@ -183,8 +183,10 @@ list_needed_columns = list(headers_eng.values())
 list_of_float_type = ['the_total_customs_value_of_the_gtd', 'total_invoice_value_for_gtd', 'currency_exchange_rate',
                       'number_of_goods_in_additional_units', 'the_number_of_goods_in_the_second_unit_change',
                       'net_weight_kg', 'gross_weight_kg', 'invoice_value', 'customs_value_rub', 'statistical_cost_usd',
-                      'usd_for_kg', 'quota']
-list_of_int_type = ['number_of_seats', 'number_of_cargo_spaces']
+                      'usd_for_kg', 'quota', 'the_amount_of_the_border_is_47_in_usd', 'invoice_cost_rub',
+                      'the_amount_of_the_border_47_in_rur']
+list_of_int_type = ['number_of_seats', 'number_of_cargo_spaces', 'the_currency_code_is_there_costs',
+                    'number_of_containers']
 list_of_date_type = ['date_of_registration', 'release_date', 'date_of_the_brokers_certificate',
                      'currency_exchange_rate_date']
 list_of_str_type = ['stat']
