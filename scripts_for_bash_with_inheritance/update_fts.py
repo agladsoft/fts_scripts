@@ -60,3 +60,4 @@ parsed_data = Fts().process(input_file_path)
 
 with open(output_file_path, 'w', encoding='utf-8') as f:
     json.dump(parsed_data, f, ensure_ascii=False, indent=4)
+ 
