@@ -88,8 +88,11 @@ class ComparisonCsv(object):
         self.df_upload: DataFrame = pd.read_csv(self.upload_file, low_memory=False, dtype=str)
         self.df_download: DataFrame = pd.read_csv(self.download_file, low_memory=False, dtype=str)
         self.rename_columns()
-        same_columns = list(set(list(self.df_download.columns)).intersection(set(list(self.df_upload.columns))))
-        return same_columns
+        return list(
+            set(list(self.df_download.columns)).intersection(
+                set(list(self.df_upload.columns))
+            )
+        )
 
     def read_csv_pandas(self, df: DataFrame, base_name_csv_file: str, same_columns) -> Tuple[DataFrame, str]:
         df: DataFrame = df.loc[:, df.columns.isin(same_columns)]
@@ -121,7 +124,8 @@ if __name__ == "__main__":
     base_name_download_file: str = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
     comparison_csv = ComparisonCsv(upload_file, download_file)
-    df_upload, df_download, hash_upload, hash_download = comparison_csv.main(base_name_upload_file, base_name_download_file)
+    df_upload, df_download, hash_upload, hash_download = comparison_csv.main(base_name_upload_file,
+                                                                             base_name_download_file)
     zip_.save_files_for_zip(df_upload, df_download, upload_file, download_file, hash_upload, hash_download)
     logger.info(f"{base_name_upload_file, base_name_download_file}: Saved files for zip")
     file_zip = zip_.zip_files(upload_file, download_file)
