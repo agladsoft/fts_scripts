@@ -7,9 +7,9 @@ import itertools
 import contextlib
 import numpy as np
 import pandas as pd
+from __init__ import *
 from pandas import DataFrame
 from typing import List, Tuple
-from __init__ import headers_eng, logger
 
 
 class Zip(object):
@@ -56,12 +56,9 @@ class ComparisonCsv(object):
             for key, value in dict_data.items():
                 with contextlib.suppress(Exception):
                     dict_data[key] = value.replace('"', '').replace("''", "")
-                    if key in ['the_total_customs_value_of_the_gtd', 'total_invoice_value_for_gtd',
-                               'currency_exchange_rate', 'number_of_goods_in_additional_units',
-                               'the_number_of_goods_in_the_second_unit_change', 'net_weight_kg', 'gross_weight_kg',
-                               'invoice_value', 'customs_value_rub', 'statistical_cost_usd', 'usd_for_kg', 'quota']:
+                    if key in list_of_float_type:
                         dict_data[key] = str(float(value))
-                    elif key in ['stat']:
+                    elif key in list_of_str_type:
                         if value in ['True', 'False']:
                             dict_data[key] = str(int(value == 'True'))
 
@@ -91,8 +88,11 @@ class ComparisonCsv(object):
         self.df_upload: DataFrame = pd.read_csv(self.upload_file, low_memory=False, dtype=str)
         self.df_download: DataFrame = pd.read_csv(self.download_file, low_memory=False, dtype=str)
         self.rename_columns()
-        same_columns = list(set(list(self.df_download.columns)).intersection(set(list(self.df_upload.columns))))
-        return same_columns
+        return list(
+            set(list(self.df_download.columns)).intersection(
+                set(list(self.df_upload.columns))
+            )
+        )
 
     def read_csv_pandas(self, df: DataFrame, base_name_csv_file: str, same_columns) -> Tuple[DataFrame, str]:
         df: DataFrame = df.loc[:, df.columns.isin(same_columns)]
@@ -124,7 +124,8 @@ if __name__ == "__main__":
     base_name_download_file: str = os.path.basename(download_file)
     logger.info(f"Upload file: {base_name_upload_file}, Download file: {base_name_download_file}")
     comparison_csv = ComparisonCsv(upload_file, download_file)
-    df_upload, df_download, hash_upload, hash_download = comparison_csv.main(base_name_upload_file, base_name_download_file)
+    df_upload, df_download, hash_upload, hash_download = comparison_csv.main(base_name_upload_file,
+                                                                             base_name_download_file)
     zip_.save_files_for_zip(df_upload, df_download, upload_file, download_file, hash_upload, hash_download)
     logger.info(f"{base_name_upload_file, base_name_download_file}: Saved files for zip")
     file_zip = zip_.zip_files(upload_file, download_file)
