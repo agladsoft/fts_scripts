@@ -55,7 +55,6 @@ basename = os.path.basename(input_file_path)
 output_file_path = os.path.join(output_folder, f'{basename}.json')
 print(f"output_file_path is {output_file_path}")
 
-
 parsed_data = Fts().process(input_file_path)
 
 with open(output_file_path, 'w', encoding='utf-8') as f:
