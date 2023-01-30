@@ -17,7 +17,7 @@ class FTS(object):
         self.folder: str = folder
 
     @staticmethod
-    def divide_chunks(list_data: list, chunk: int) -> Generator[list]:
+    def divide_chunks(list_data: list, chunk: int) -> Generator:
         """
         Divide by chunks of a list.
         """
