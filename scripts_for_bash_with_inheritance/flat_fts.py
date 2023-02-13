@@ -74,7 +74,7 @@ class FTS(object):
         for key, value in data.items():
             with contextlib.suppress(Exception):
                 if key in list_of_float_type:
-                    data[key] = float(value)
+                    data[key] = float(re.sub(" +", "", value).replace(',', '.'))
                 elif key in list_of_str_type:
                     if value in ['True', 'False']:
                         data[key] = str(int(value == 'True'))
