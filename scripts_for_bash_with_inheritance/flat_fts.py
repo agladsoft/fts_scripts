@@ -29,7 +29,8 @@ class FTS(object):
         """
         Convert to a date type.
         """
-        if date_of_registration := re.findall(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}[.]\d{1,2}[.]\d{2,4}', date):
+        if date_of_registration := re.findall(
+                r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}[.]\d{1,2}[.]\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}', date):
             for date_format in date_formats:
                 with contextlib.suppress(ValueError):
                     return str(datetime.datetime.strptime(date_of_registration[0], date_format).date())
