@@ -52,7 +52,8 @@ class FTS(object):
         dict_columns_eng: dict = {}
         for column, columns in itertools.product(df.columns, headers_eng):
             for column_eng in columns:
-                if column == column_eng:
+                column_strip = column.strip()
+                if column_strip == column_eng.strip():
                     dict_columns_eng[column] = headers_eng[columns]
         df.rename(columns=dict_columns_eng, inplace=True)
 
