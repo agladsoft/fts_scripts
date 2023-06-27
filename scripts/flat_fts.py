@@ -14,12 +14,12 @@ from pandas import DataFrame, read_csv
 
 class FTS(object):
     def __init__(self, filename: str, folder: str, headers_eng: dict, list_of_float_type: list,
-                 list_of_bool_type: list, list_of_int_type: list, list_of_date_type: list):
+                 list_of_str_type: list, list_of_int_type: list, list_of_date_type: list):
         self.filename: str = filename
         self.folder: str = folder
         self.HEADERS_ENG: dict = headers_eng
         self.LIST_OF_FLOAT_TYPE: list = list_of_float_type
-        self.LIST_OF_BOOL_TYPE: list = list_of_bool_type
+        self.LIST_OF_STR_TYPE: list = list_of_str_type
         self.LIST_OF_INT_TYPE: list = list_of_int_type
         self.LIST_OF_DATE_TYPE: list = list_of_date_type
 
@@ -51,17 +51,16 @@ class FTS(object):
         with contextlib.suppress(ValueError):
             return int(int_value)
 
-    @staticmethod
-    def rename_columns(df: DataFrame) -> None:
+    def rename_columns(self, df: DataFrame) -> None:
         """
         Rename of a columns.
         """
         dict_columns_eng: dict = {}
-        for column, columns in itertools.product(df.columns, HEADERS_ENG):
+        for column, columns in itertools.product(df.columns, self.HEADERS_ENG):
             for column_eng in columns:
                 column_strip: str = column.strip()
                 if column_strip == column_eng.strip():
-                    dict_columns_eng[column] = HEADERS_ENG[columns]
+                    dict_columns_eng[column] = self.HEADERS_ENG[columns]
         df.rename(columns=dict_columns_eng, inplace=True)
 
     def convert_csv_to_dict(self) -> list:
@@ -81,14 +80,14 @@ class FTS(object):
         """
         for key, value in data.items():
             with contextlib.suppress(Exception):
-                if key in LIST_OF_FLOAT_TYPE:
+                if key in self.LIST_OF_FLOAT_TYPE:
                     data[key] = float(re.sub(" +", "", value).replace(',', '.'))
-                elif key in LIST_OF_STR_TYPE:
+                elif key in self.LIST_OF_STR_TYPE:
                     if value in ['True', 'False']:
                         data[key] = str(int(value == 'True'))
-                elif key in LIST_OF_DATE_TYPE:
+                elif key in self.LIST_OF_DATE_TYPE:
                     data[key] = self.convert_format_date(value)
-                elif key in LIST_OF_INT_TYPE:
+                elif key in self.LIST_OF_INT_TYPE:
                     data[key] = self.convert_to_int(value)
 
     def save_data_to_file(self, i: int, chunk_parsed_data: list) -> None:

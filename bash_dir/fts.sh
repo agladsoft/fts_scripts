@@ -47,7 +47,7 @@ for table in "${TablesArray[@]}"; do
     if [[ ${mime_type} = "application/x-msaccess" ]]
     then
       echo "Will convert XLS '${file}' to CSV '${csv_name}'"
-      python3 ${XL_IDP_ROOT_FTS}/scripts_for_bash_with_inheritance/convert_mdb_to_csv.py "${file}" "${csv_path}"
+      python3 ${XL_IDP_ROOT_FTS}/scripts/convert_mdb_to_csv.py "${file}" "${csv_path}"
     elif [[ ${mime_type} = "application/vnd.ms-excel" ]]
     then
       echo "Will convert XLS '${file}' to CSV '${csv_name}'"
