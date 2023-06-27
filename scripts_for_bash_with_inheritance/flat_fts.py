@@ -29,7 +29,8 @@ class FTS(object):
         """
         Convert to a date type.
         """
-        if date_of_registration := re.findall(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}[.]\d{1,2}[.]\d{2,4}', date):
+        if date_of_registration := re.findall(
+                r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}[.]\d{1,2}[.]\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}', date):
             for date_format in date_formats:
                 with contextlib.suppress(ValueError):
                     return str(datetime.datetime.strptime(date_of_registration[0], date_format).date())
@@ -51,7 +52,8 @@ class FTS(object):
         dict_columns_eng: dict = {}
         for column, columns in itertools.product(df.columns, headers_eng):
             for column_eng in columns:
-                if column == column_eng:
+                column_strip: str = column.strip()
+                if column_strip == column_eng.strip():
                     dict_columns_eng[column] = headers_eng[columns]
         df.rename(columns=dict_columns_eng, inplace=True)
 
@@ -73,7 +75,7 @@ class FTS(object):
         for key, value in data.items():
             with contextlib.suppress(Exception):
                 if key in list_of_float_type:
-                    data[key] = float(value)
+                    data[key] = float(re.sub(" +", "", value).replace(',', '.'))
                 elif key in list_of_str_type:
                     if value in ['True', 'False']:
                         data[key] = str(int(value == 'True'))
@@ -99,11 +101,12 @@ if __name__ == "__main__":
     parsed_data: list = fts.convert_csv_to_dict()
     original_file_index: int = 0
     divided_parsed_data: list = list(fts.divide_chunks(parsed_data, 50000))
-    for index, chunk_parsed_data in enumerate(divided_parsed_data):
+    for chunk_parsed_data in divided_parsed_data:
         for dict_data in chunk_parsed_data:
             fts.change_type(dict_data)
             dict_data['original_file_name'] = os.path.basename(input_file_path)
             dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             dict_data['original_file_index'] = original_file_index
             original_file_index += 1
+    for index, chunk_parsed_data in enumerate(divided_parsed_data):
         fts.save_data_to_file(index)

@@ -7,7 +7,7 @@ if logger.hasHandlers():
 logger.addHandler(console)
 logger.setLevel(logging.INFO)
 
-date_formats = ("%m/%d/%y", "%d.%m.%Y")
+date_formats = ("%m/%d/%y", "%d.%m.%Y", "%m-%d-%y")
 
 headers_eng = {
     ("STAT", "STAT (STAT)"): "stat",
