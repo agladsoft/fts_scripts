@@ -2,7 +2,7 @@ import os
 import csv
 import sys
 from mdb_parser import MDBTable, MDBParser
-from __init__ import logger
+from __init__fts import logger
 
 basename_input_file_path = os.path.basename(sys.argv[1])
 dir_name_input_file_path = os.path.dirname(sys.argv[1])
