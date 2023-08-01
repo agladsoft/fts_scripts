@@ -1,3 +1,4 @@
+DATE_FORMATS = ("%m/%d/%y", "%d.%m.%Y", "%m-%d-%y")
 
 HEADERS_ENG = {
     ("STAT", "STAT (STAT)"): "stat",

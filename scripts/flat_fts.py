@@ -1,4 +1,3 @@
-import os
 import re
 import sys
 import json
@@ -10,6 +9,10 @@ from __init__ import *
 from __init__fts import *
 from typing import Generator
 from pandas import DataFrame, read_csv
+
+
+logger: logging.getLogger = get_logger(os.path.basename(__file__).replace(".py", "_")
+                                       + str(datetime.datetime.now().date()))
 
 
 class FTS(object):
@@ -67,12 +70,15 @@ class FTS(object):
         """
         Csv data representation in json.
         """
-        df: DataFrame = read_csv(self.filename, low_memory=False, dtype=str)
-        df.replace({np.NAN: None}, inplace=True)
-        df = df.dropna(axis=0, how='all')
-        df = df.dropna(axis=1, how='all')
-        self.rename_columns(df)
-        return df.to_dict('records')
+        try:
+            df: DataFrame = read_csv(self.filename, low_memory=False, dtype=str)
+            df.replace({np.NAN: None}, inplace=True)
+            df = df.dropna(axis=0, how='all')
+            df = df.dropna(axis=1, how='all')
+            self.rename_columns(df)
+            return df.to_dict('records')
+        except Exception as ex:
+            logger.error(f"Exception is {ex}")
 
     def change_type(self, data: dict) -> None:
         """
@@ -90,6 +96,12 @@ class FTS(object):
                 elif key in self.LIST_OF_INT_TYPE:
                     data[key] = self.convert_to_int(value)
 
+    def add_columns(self, dict_data: dict, original_file_index: int) -> None:
+        dict_data['original_file_name'] = os.path.basename(self.filename)
+        dict_data['original_file_parsed_on'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        dict_data['original_file_index'] = original_file_index
+        original_file_index += 1
+
     def save_data_to_file(self, i: int, chunk_parsed_data: list) -> None:
         """
         Save a data to a file.
@@ -103,18 +115,17 @@ class FTS(object):
         """
         Parse data from CSV file. And split it by chunks.
         """
+        logger.info(f"Filename is {self.filename}")
         parsed_data: list = self.convert_csv_to_dict()
         original_file_index: int = 0
         divided_parsed_data: list = list(self.divide_chunks(parsed_data, 50000))
         for chunk_parsed_data in divided_parsed_data:
             for dict_data in chunk_parsed_data:
                 self.change_type(dict_data)
-                dict_data['original_file_name'] = os.path.basename(self.filename)
-                dict_data['original_file_parsed_on'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                dict_data['original_file_index'] = original_file_index
-                original_file_index += 1
+                self.add_columns(dict_data, original_file_index)
         for index, chunk_parsed_data in enumerate(divided_parsed_data):
             self.save_data_to_file(index, chunk_parsed_data)
+        logger.info("The script has completed its work")
 
 
 if __name__ == "__main__":
