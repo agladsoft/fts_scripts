@@ -31,7 +31,7 @@ for table in "${TablesArray[@]}"; do
     mkdir "${json_path}"
   fi
 
-  find "${xls_path}" -maxdepth 1 -type f \( -name "*.mdb" -or -name "*.xls*" -or -name "*.accdb" \) ! -newermt '3 seconds ago' -print0 | while read -d $'\0' file
+  find "${xls_path}" -maxdepth 1 -type f \( -name "*.mdb" -or -name "*.xls*" -or -name "*.accdb" \) ! -newermt '10 seconds ago' -print0 | while read -d $'\0' file
   do
 
     if [[ "${file}" == *"error_"* ]];
