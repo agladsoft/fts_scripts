@@ -70,15 +70,12 @@ class FTS(object):
         """
         Csv data representation in json.
         """
-        try:
-            df: DataFrame = read_csv(self.filename, low_memory=False, dtype=str)
-            df.replace({np.NAN: None}, inplace=True)
-            df = df.dropna(axis=0, how='all')
-            df = df.dropna(axis=1, how='all')
-            self.rename_columns(df)
-            return df.to_dict('records')
-        except Exception as ex:
-            logger.error(f"Exception is {ex}")
+        df: DataFrame = read_csv(self.filename, low_memory=False, dtype=str)
+        df.replace({np.NAN: None}, inplace=True)
+        df = df.dropna(axis=0, how='all')
+        df = df.dropna(axis=1, how='all')
+        self.rename_columns(df)
+        return df.to_dict('records')
 
     def change_type(self, data: dict) -> None:
         """
