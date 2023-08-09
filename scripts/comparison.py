@@ -7,7 +7,7 @@ import itertools
 import contextlib
 import numpy as np
 import pandas as pd
-from __init__ import *
+from __init__fts import *
 from pandas import DataFrame
 from typing import List, Tuple
 
@@ -56,18 +56,18 @@ class ComparisonCsv(object):
             for key, value in dict_data.items():
                 with contextlib.suppress(Exception):
                     dict_data[key] = value.replace('"', '').replace("''", "")
-                    if key in list_of_float_type:
+                    if key in LIST_OF_FLOAT_TYPE:
                         dict_data[key] = str(float(value))
-                    elif key in list_of_str_type:
+                    elif key in LIST_OF_STR_TYPE:
                         if value in ['True', 'False']:
                             dict_data[key] = str(int(value == 'True'))
 
     def rename_columns(self) -> None:
         dict_columns_eng = {}
-        for column, _columns in itertools.product(self.df_upload.columns, headers_eng):
+        for column, _columns in itertools.product(self.df_upload.columns, HEADERS_ENG):
             for column_eng in _columns:
                 if column == column_eng:
-                    dict_columns_eng[column] = headers_eng[_columns]
+                    dict_columns_eng[column] = HEADERS_ENG[_columns]
         self.df_upload.rename(columns=dict_columns_eng, inplace=True)
 
     def compare_csv(self) -> None:
