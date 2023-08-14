@@ -65,7 +65,7 @@ HEADERS_ENG = {
     ("G024B",): "g024b",
     ("G027",): "g028",
     ("G144B",): "g144b",
-    ("G29",): "customs_code_at_the_border",
+    ("G29","G29 (Код таможни на границе)"): "customs_code_at_the_border",
     ("G31_1", "G31_1 (Наименование и характеристики товаров)"): "name_and_characteristics_of_the_goods",
     ("G31_11", "G31_11 (Фирма-изготовитель)"): "manufacturer_company",
     ("G31_12", "G31_12 (Товарный знак, патент)"): "trademark_patent",
@@ -166,7 +166,7 @@ HEADERS_ENG = {
     ("NTRANS",): "ntrans",
     ("G30STREET", "G30STREET (Улица склада)"): "warehouse_street",
     ("G30CITY", "G30CITY (Город склада)"): "warehouse_city",
-    ("VIDTRANS",): "vidtrans"
+    ("VIDTRANS","VIDTRANS (Вид транс.средства)"): "vidtrans"
 }
 
 LIST_OF_FLOAT_TYPE: list = [
