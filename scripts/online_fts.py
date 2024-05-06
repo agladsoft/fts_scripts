@@ -1,7 +1,7 @@
 import os
 import sys
 from flat_fts import FTS
-from __init__kz_mir import *
+from __init__online_fts import *
 
 
 class OnlineFTS(FTS):
