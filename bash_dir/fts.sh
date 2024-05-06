@@ -5,6 +5,7 @@
 declare -a TablesArray=(
     "flat_fts"
     "kz_mir"
+    "online_fts"
 )
 
 for table in "${TablesArray[@]}"; do
