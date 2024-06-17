@@ -54,6 +54,10 @@ class FTS(object):
         with contextlib.suppress(ValueError):
             return int(int_value)
 
+    @staticmethod
+    def has_cyrillic(columns):
+        return False
+
     def rename_columns(self, df: DataFrame) -> None:
         """
         Rename of a columns.
@@ -65,6 +69,9 @@ class FTS(object):
                 if column_strip == column_eng.strip().upper():
                     dict_columns_eng[column] = self.HEADERS_ENG[columns]
         df.rename(columns=dict_columns_eng, inplace=True)
+        if self.has_cyrillic(list(df.columns)):
+            logger.error(f"Не все колонки переведены. Колонки - {list(df.columns)}")
+            raise AssertionError("Не все колонки переведены")
 
     def convert_csv_to_dict(self) -> list:
         """

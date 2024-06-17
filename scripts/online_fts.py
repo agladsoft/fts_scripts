@@ -1,3 +1,4 @@
+import re
 import os
 import sys
 from flat_fts import FTS
@@ -5,7 +6,10 @@ from __init__online_fts import *
 
 
 class OnlineFTS(FTS):
-    pass
+    @staticmethod
+    def has_cyrillic(columns):
+        list_is_ru_columns = [bool(re.search('[а-яА-Я]', column)) for column in columns]
+        return any(list_is_ru_columns)
 
 
 if __name__ == "__main__":
